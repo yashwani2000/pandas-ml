@@ -56,10 +56,10 @@ class TestImbalance(tm.TestCase):
     def test_objectmapper_ensemble(self):
         import imblearn.ensemble as ensemble
         df = pdml.ModelFrame([])
-        self.assertIs(df.imbalance.ensemble.BalanceCascade,
-                      ensemble.BalanceCascade)
-        self.assertIs(df.imbalance.ensemble.EasyEnsemble,
-                      ensemble.EasyEnsemble)
+        self.assertIs(df.imbalance.ensemble.BalancedBaggingClassifier,
+                      ensemble.BalancedBaggingClassifier)
+        self.assertIs(df.imbalance.ensemble.EasyEnsembleClassifier,
+                      ensemble.EasyEnsembleClassifier)
 
     def test_sample(self):
         from imblearn.under_sampling import ClusterCentroids, OneSidedSelection
@@ -93,7 +93,7 @@ class TestImbalance(tm.TestCase):
             mod2 = model(random_state=self.random_state)
 
             result = df.fit_sample(mod1)
-            expected_X, expected_y = mod2.fit_sample(X, y)
+            expected_X, expected_y = mod2.fit_resample(X, y)
 
             self.assertIsInstance(result, pdml.ModelFrame)
             tm.assert_numpy_array_equal(result.target.values, expected_y)
@@ -101,9 +101,9 @@ class TestImbalance(tm.TestCase):
             tm.assert_index_equal(result.columns, df.columns)
 
     def test_sample_ensemble(self):
-        from imblearn.ensemble import BalanceCascade, EasyEnsemble
+        from imblearn.ensemble import BalancedBaggingClassifier, EasyEnsembleClassifier
 
-        models = [BalanceCascade, EasyEnsemble]
+        models = [BalancedBaggingClassifier, EasyEnsembleClassifier]
 
         X = np.random.randn(100, 5)
         y = np.array([0, 1]).repeat([80, 20])
@@ -117,21 +117,25 @@ class TestImbalance(tm.TestCase):
             df.fit(mod1)
             mod2.fit(X, y)
 
-            results = df.fit_resample(mod1)
-            expected_X, expected_y = mod2.fit_resample(X, y)
+            results = df.fit(mod1)
+            out = mod2.fit(X, y)
 
-            self.assertIsInstance(results, list)
-            for r in results:
-                self.assertIsInstance(r, pdml.ModelFrame)
-                tm.assert_index_equal(r.columns, df.columns)
+            self.assertIsInstance(results, type(mod1))
+            self.assertIsInstance(out, type(mod2))
+            for i, val in enumerate(results.estimators_features_):
+                assert((val == out.estimators_features_[i]).all())
+            for i, val in enumerate(results.estimators_samples_):
+                assert ((val == out.estimators_samples_[i]).all())
 
             mod1 = model(random_state=self.random_state)
             mod2 = model(random_state=self.random_state)
 
-            results = df.fit_sample(mod1)
-            expected_X, expected_y = mod2.fit_sample(X, y)
+            results = df.fit(mod1)
+            out = mod2.fit(X, y)
 
-            self.assertIsInstance(results, list)
-            for r in results:
-                self.assertIsInstance(r, pdml.ModelFrame)
-                tm.assert_index_equal(r.columns, df.columns)
+            self.assertIsInstance(results, type(mod1))
+            self.assertIsInstance(out, type(mod2))
+            for i, val in enumerate(results.estimators_features_):
+                assert((val == out.estimators_features_[i]).all())
+            for i, val in enumerate(results.estimators_samples_):
+                assert ((val == out.estimators_samples_[i]).all())
