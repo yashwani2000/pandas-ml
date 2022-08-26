@@ -147,8 +147,8 @@ class TestSeabornDistribution(SeabornCase):
 
         ax = df.sns.kdeplot()
         self.assertIsInstance(ax, matplotlib.axes.Axes)
-        self.assertEqual(ax.get_xlabel(), '')
-        self.assertEqual(ax.get_ylabel(), '')
+        self.assertEqual(ax.get_xlabel(), 'a')
+        self.assertEqual(ax.get_ylabel(), 'Density')
         tm.close()
 
         ax = df.sns.kdeplot(data='b', data2='c')

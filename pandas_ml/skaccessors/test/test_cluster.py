@@ -25,10 +25,10 @@ class TestCluster(tm.TestCase):
         self.assertIs(df.cluster.MeanShift, cluster.MeanShift)
         self.assertIs(df.cluster.SpectralClustering, cluster.SpectralClustering)
 
-        self.assertIs(df.cluster.bicluster.SpectralBiclustering,
-                      cluster.bicluster.SpectralBiclustering)
-        self.assertIs(df.cluster.bicluster.SpectralCoclustering,
-                      cluster.bicluster.SpectralCoclustering)
+        self.assertIs(df.cluster.SpectralBiclustering,
+                      cluster.SpectralBiclustering)
+        self.assertIs(df.cluster.SpectralCoclustering,
+                      cluster.SpectralCoclustering)
 
     def test_estimate_bandwidth(self):
         iris = datasets.load_iris()

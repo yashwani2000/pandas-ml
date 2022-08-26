@@ -31,7 +31,7 @@ class TestModelFrame(tm.TestCase):
                                 dtype=float)
         tm.assert_frame_equal(result, expected)
         expected = pd.Series([1, 2, 3], index=['a', 'b', 'c'], name='A', dtype=float)
-        tm.assert_series_equal(result.target, expected)
+        tm.assert_series_equal(result.target, expected, check_series_type=False)
         self.assertEqual(result.target.name, 'A')
         self.assertEqual(result.target_name, 'A')
 

@@ -14,6 +14,7 @@ from pandas.util.testing import (assert_produces_warning,  # noqa
                                  assert_index_equal,  # noqa
                                  assert_series_equal,  # noqa
                                  # assert_frame_equal,  # noqa
+                                 assert_almost_equal,  # noqa
                                  assert_numpy_array_equal)  # noqa
 
 
