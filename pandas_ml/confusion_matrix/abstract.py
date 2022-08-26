@@ -48,7 +48,7 @@ class ConfusionMatrixAbstract(object):
                 d = {labels[0]: False, labels[1]: True}
                 self._y_true = self._y_true.map(d)
                 self._y_pred = self._y_pred.map(d)
-                raise(NotImplementedError)  # ToDo: see self.classes and BinaryConfusionMatrix.__class ...
+                raise NotImplementedError  # ToDo: see self.classes and BinaryConfusionMatrix.__class ...
 
         N_true = len(y_true)
         N_pred = len(y_pred)
@@ -58,12 +58,13 @@ class ConfusionMatrixAbstract(object):
         df = pd.crosstab(self._y_true, self._y_pred)
         idx = self._classes(df)
 
-        if self.is_binary and pdml.compat._PANDAS_ge_021:
+        if self.is_binary:
             df = df.reindex([False, True])
             df = df.reindex([False, True], axis=1)
             df = df.fillna(0)
         else:
-            df = df.loc[idx, idx.copy()].fillna(0)  # if some columns or rows are missing
+            # df = df.loc[idx, idx.copy()].fillna(0)  # if some columns or rows are missing
+            df = df.reindex(index=idx, columns=idx.copy(), fill_value=0)
 
         self._df_confusion = df
         self._df_confusion.index.name = self.true_name
@@ -77,9 +78,9 @@ class ConfusionMatrixAbstract(object):
 
     def _label(self, i, labels):
         try:
-            return(labels[i])
+            return labels[i]
         except IndexError:
-            return(i)
+            return i
 
     def __repr__(self):
         return(self.to_dataframe(calc_sum=self.display_sum).__repr__())
@@ -269,7 +270,7 @@ class ConfusionMatrixAbstract(object):
     def binarize(self, select):
         """Returns a binary confusion matrix from
         a confusion matrix"""
-        if not isinstance(select, collections.Iterable):
+        if not isinstance(select, collections.abc.Iterable):
             select = np.array(select)
 
         y_true_bin = self.y_true().map(lambda x: x in select)

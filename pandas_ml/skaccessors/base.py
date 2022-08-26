@@ -3,7 +3,7 @@
 import pandas as pd
 
 try:
-    from sklearn.datasets.base import Bunch
+    from sklearn.utils import Bunch
 except ImportError:
 
     class Bunch(object):
@@ -16,7 +16,7 @@ def _maybe_sklearn_data(data, target):
             raise ValueError("'target' can't be specified for sklearn.datasets")
         # this should be first
         target = data.target
-        # instanciate here to add column name
+        # instantiate here to add column name
         columns = getattr(data, 'feature_names', None)
         data = pd.DataFrame(data.data, columns=columns)
         return data, target

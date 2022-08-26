@@ -71,7 +71,7 @@ class ModelFrameGroupBy(pd.core.groupby.DataFrameGroupBy, ModelPredictor):
     def _wrap_results(self, results):
         keys = []
         values = []
-        for key, value in compat.iteritems(results):
+        for key, value in results.items():
             keys.extend([key] * len(value))
             values.append(value)
         results = pd.concat(values, axis=0, ignore_index=False)

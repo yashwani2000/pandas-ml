@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import pandas as pd
-
 from pandas_ml.core import base
 
 

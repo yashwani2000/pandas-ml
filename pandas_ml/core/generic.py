@@ -64,7 +64,7 @@ class ModelTransformer(object):
     @Appender(_shared_docs['estimator_methods'] %
               dict(funcname='transform', returned='returned : transformed result'))
     def transform(self, estimator, *args, **kwargs):
-        if isinstance(estimator, compat.string_types):
+        if isinstance(estimator, str):
             # transform using patsy
             return misc.transform_with_patsy(estimator, self, *args, **kwargs)
 

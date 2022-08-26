@@ -4,7 +4,6 @@ import warnings
 
 import numpy as np
 import pandas as pd
-import pandas.compat as compat
 
 import pandas_ml.imbaccessors as imbaccessors
 import pandas_ml.skaccessors as skaccessors
@@ -63,7 +62,6 @@ class ModelFrame(ModelPredictor, pd.DataFrame):
 
         data, target = skaccessors._maybe_sklearn_data(data, target)
         data, target = smaccessors._maybe_statsmodels_data(data, target)
-
         # retrieve target_name
         if isinstance(data, ModelFrame):
             target_name = data.target_name
@@ -98,7 +96,7 @@ class ModelFrame(ModelPredictor, pd.DataFrame):
     def _maybe_convert_data(self, data, target,
                             *args, **kwargs):
         """
-        Internal function to instanciate data and target
+        Internal function to instantiate data and target
 
         Parameters
         ----------
@@ -115,7 +113,7 @@ class ModelFrame(ModelPredictor, pd.DataFrame):
             if data is not None:
                 index = data.index
 
-            target = np.array(target)
+            target = np.array(target, dtype=np.int64)
             if len(target.shape) == 1:
                 target = pd.Series(target, index=index)
             else:
@@ -183,6 +181,7 @@ class ModelFrame(ModelPredictor, pd.DataFrame):
         else:
             raise ValueError('target cannot be converted to ModelSeries or ModelFrame')
 
+        # return data, target
         return pd.concat([target, data], axis=1), target
 
     def has_data(self):
@@ -458,7 +457,7 @@ class ModelFrame(ModelPredictor, pd.DataFrame):
         try:
             transformed = super(ModelFrame, self).transform(estimator, *args, **kwargs)
 
-            if not isinstance(estimator, compat.string_types):
+            if not isinstance(estimator, str):
                 # set inverse columns
                 estimator._pdml_original_columns = self.data.columns
             return transformed
@@ -473,7 +472,7 @@ class ModelFrame(ModelPredictor, pd.DataFrame):
     def fit_transform(self, estimator, *args, **kwargs):
         transformed = super(ModelFrame, self).fit_transform(estimator, *args, **kwargs)
 
-        if not isinstance(estimator, compat.string_types):
+        if not isinstance(estimator, str):
             # set inverse columns
             estimator._pdml_original_columns = self.data.columns
         return transformed
@@ -904,7 +903,8 @@ class ModelFrame(ModelPredictor, pd.DataFrame):
     def _xgboost(self):
         return xgboost.XGBoostMethods(self)
 
-    @Appender(pd.core.generic.NDFrame.groupby.__doc__)
+    # @Appender(pd.core.generic.NDFrame.groupby.__doc__)
+    @Appender(pd.DataFrame.groupby.__doc__)
     def groupby(self, by=None, axis=0, level=None, as_index=True, sort=True,
                 group_keys=True, squeeze=False):
         from pandas_ml.core.groupby import groupby

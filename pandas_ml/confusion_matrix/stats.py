@@ -2,7 +2,7 @@
 # -*- coding: utf8 -*-
 
 import numpy as np
-from pandas.compat import range
+# from pandas.compat import range
 
 
 def binom_interval(success, total, confint=0.95):
@@ -57,7 +57,7 @@ def class_agreement(df):
     nis2 = ni[ni > 1].map(lambda x: choose(int(x), 2)).sum()
     njs2 = nj[nj > 1].map(lambda x: choose(int(x), 2)).sum()
 
-    num = df[df > 1].dropna(axis=[0, 1], thresh=1).applymap(lambda n: choose(n, 2)).sum().sum() - np.float64(nis2 * njs2) / n2
+    num = df[df > 1].dropna(thresh=1).applymap(lambda n: choose(n, 2)).sum().sum() - np.float64(nis2 * njs2) / n2
     den = (np.float64(nis2 + njs2) / 2 - np.float64(nis2 * njs2) / n2)
     crand = num / den
 

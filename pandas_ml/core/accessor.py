@@ -78,9 +78,11 @@ class _AccessorMethods(object):
         """Attach cls._method_mapper to passed mapper"""
         if cls._method_mapper is None:
             return mapper
-        for key, class_dict in compat.iteritems(cls._method_mapper):
+        for key, class_dict in cls._method_mapper.items():
+        # for key, class_dict in compat.iteritems(cls._method_mapper):
             # mapping method_name to actual class method
-            class_dict = {k: getattr(cls, m) for k, m in compat.iteritems(class_dict)}
+            # class_dict = {k: getattr(cls, m) for k, m in compat.iteritems(class_dict)}
+            class_dict = {k: getattr(cls, m) for k, m in class_dict.items()}
             mapper[key] = dict(mapper[key], **class_dict)
         return mapper
 

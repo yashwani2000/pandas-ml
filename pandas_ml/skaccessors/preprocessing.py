@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import numpy as np
-
+from sklearn.impute import SimpleImputer
 from pandas_ml.core.accessor import _AccessorMethods, _attach_methods
 from pandas_ml.compat import (_SKLEARN_INSTALLED, is_integer_dtype)
 
@@ -10,7 +10,7 @@ if _SKLEARN_INSTALLED:
     import sklearn.preprocessing as pp
     _keep_col_classes = [pp.Binarizer,
                          pp.FunctionTransformer,
-                         pp.Imputer,
+                         SimpleImputer,
                          pp.KernelCenterer,
                          pp.LabelEncoder,
                          pp.MaxAbsScaler,
